@@ -1,0 +1,407 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta name="color-scheme" content="light dark" />
+  <link rel="icon" href="data:," />
+  <title>UFO Power Core Schematic</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans+Condensed:wght@400;500;600;700&display=swap');
+
+    :root {
+      color-scheme: light dark;
+      --paper:#f3f5f2;
+      --surface:#fbfcfa;
+      --surface-2:#e7ebe6;
+      --ink:#13251f;
+      --muted:#52635d;
+      --rule:#aebbb5;
+      --grid:#d8dfda;
+      --green:#087f5b;
+      --green-soft:#d9eee5;
+      --amber:#b76508;
+      --amber-soft:#fae9ce;
+      --red:#b3282f;
+      --red-soft:#f7dadd;
+      --blue:#1f6aa5;
+      --blue-soft:#dceaf5;
+      --shadow:rgba(20,40,32,.14);
+      --core:#d7fb9b;
+    }
+    @media (prefers-color-scheme: dark) {
+      :root {
+        --paper:#0a1110;
+        --surface:#101917;
+        --surface-2:#18231f;
+        --ink:#e7eee9;
+        --muted:#9dada6;
+        --rule:#43524c;
+        --grid:#1d2a25;
+        --green:#52d5a4;
+        --green-soft:#153e31;
+        --amber:#ffb85d;
+        --amber-soft:#422f17;
+        --red:#ff747c;
+        --red-soft:#421f22;
+        --blue:#78bbed;
+        --blue-soft:#173249;
+        --shadow:rgba(0,0,0,.35);
+        --core:#c9ff70;
+      }
+    }
+    *{box-sizing:border-box}
+    html{scroll-behavior:smooth}
+    body{
+      margin:0;
+      min-width:320px;
+      background-color:var(--paper);
+      background-image:linear-gradient(var(--grid) 1px,transparent 1px),linear-gradient(90deg,var(--grid) 1px,transparent 1px);
+      background-size:28px 28px;
+      color:var(--ink);
+      font-family:"IBM Plex Sans Condensed",sans-serif;
+      line-height:1.42;
+    }
+    button{font:inherit}
+    main{max-width:1500px;margin:0 auto;padding:clamp(18px,3vw,42px)}
+    .topline{display:flex;align-items:flex-start;justify-content:space-between;gap:24px;padding:4px 0 20px;border-bottom:2px solid var(--ink)}
+    .eyebrow{font:600 12px/1.2 "IBM Plex Mono",monospace;letter-spacing:.13em;color:var(--green);margin:0 0 8px}
+    h1{font-size:clamp(30px,5vw,66px);line-height:.94;letter-spacing:-.035em;max-width:780px;margin:0;font-weight:700}
+    .lede{max-width:610px;font-size:clamp(16px,2vw,21px);color:var(--muted);margin:16px 0 0}
+    .revision{font-family:"IBM Plex Mono",monospace;border:1px solid var(--ink);padding:12px 14px;min-width:180px;background:var(--surface);box-shadow:5px 5px 0 var(--ink)}
+    .revision strong,.revision span{display:block}.revision strong{font-size:13px}.revision span{font-size:11px;color:var(--muted);margin-top:4px}
+
+    .modebar{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin:22px 0 14px}
+    .modebar-label{font:600 11px "IBM Plex Mono",monospace;letter-spacing:.1em;margin-right:5px;color:var(--muted)}
+    .mode-btn{border:1px solid var(--rule);background:var(--surface);color:var(--ink);padding:9px 13px;cursor:pointer;min-height:42px}
+    .mode-btn:hover{border-color:var(--ink)}
+    .mode-btn.active{background:var(--ink);color:var(--paper);border-color:var(--ink)}
+    .mode-note{margin-left:auto;font:500 11px/1.35 "IBM Plex Mono",monospace;color:var(--muted);max-width:330px}
+
+    .board{display:grid;grid-template-columns:minmax(0,1fr) 330px;border:1px solid var(--ink);background:var(--surface);box-shadow:10px 10px 0 var(--shadow)}
+    .schematic{min-width:0;padding:14px;overflow:hidden}
+    .schematic-head{display:flex;justify-content:space-between;gap:16px;align-items:center;margin:0 2px 10px;font:500 11px "IBM Plex Mono",monospace;color:var(--muted)}
+    .schematic-head strong{color:var(--ink);font-size:12px}
+    svg{display:block;width:100%;height:auto;min-height:540px;max-height:690px;background:var(--surface)}
+    .wire{fill:none;stroke:var(--rule);stroke-width:3;stroke-linecap:square;stroke-linejoin:miter;transition:stroke .25s,opacity .25s,stroke-width .25s;opacity:.35}
+    .wire.active{stroke:var(--green);stroke-width:5;opacity:1}
+    .wire.pulse.active{stroke:var(--amber);stroke-dasharray:11 8;animation:flow 1.1s linear infinite}
+    .wire.safe.active{stroke:var(--red);stroke-dasharray:4 8}
+    @keyframes flow{to{stroke-dashoffset:-38}}
+    @media (prefers-reduced-motion:reduce){.wire{transition:none}.wire.pulse.active{animation:none}}
+    .node rect,.node polygon{fill:var(--surface);stroke:var(--ink);stroke-width:2;transition:fill .2s,stroke .2s}
+    .node text{pointer-events:none;fill:var(--ink)}
+    .node .tag{font:600 11px "IBM Plex Mono",monospace;letter-spacing:.08em;fill:var(--muted)}
+    .node .name{font:600 15px "IBM Plex Sans Condensed",sans-serif}
+    .node .spec{font:500 10px "IBM Plex Mono",monospace;fill:var(--muted)}
+    .node{cursor:pointer;outline:none}
+    .node:hover rect,.node:focus rect,.node:hover polygon,.node:focus polygon,.node.selected rect,.node.selected polygon{fill:var(--green-soft);stroke:var(--green);stroke-width:3}
+    .core-ring{fill:none;stroke:var(--ink);stroke-width:2}
+    .core-glow{fill:var(--core);opacity:.18;stroke:var(--green);stroke-width:4}
+    .core-orbit{fill:none;stroke:var(--green);stroke-width:2;stroke-dasharray:7 7}
+    .hazard{fill:var(--amber-soft);stroke:var(--amber);stroke-width:2}
+    .bus{fill:var(--blue-soft)!important;stroke:var(--blue)!important}
+    .dump{fill:var(--red-soft)!important;stroke:var(--red)!important}
+    .smalllabel{font:500 10px "IBM Plex Mono",monospace;fill:var(--muted)}
+    .rail-label{font:600 10px "IBM Plex Mono",monospace;fill:var(--blue)}
+
+    .detail{border-left:1px solid var(--ink);padding:22px;display:flex;flex-direction:column;min-width:0;background:var(--surface-2)}
+    .detail-kicker{font:600 11px "IBM Plex Mono",monospace;color:var(--green);letter-spacing:.1em;margin:0 0 8px}
+    .detail h2{font-size:28px;line-height:1;margin:0 0 12px}
+    .detail-desc{font-size:16px;margin:0 0 22px;color:var(--muted)}
+    .spec-list{margin:0}.spec-list div{padding:12px 0;border-top:1px solid var(--rule)}
+    .spec-list dt{font:600 10px "IBM Plex Mono",monospace;color:var(--muted);letter-spacing:.09em;margin-bottom:4px}
+    .spec-list dd{margin:0;font-size:15px}
+    .boundary{margin-top:auto;padding-top:18px;border-top:2px solid var(--ink);font:500 11px/1.5 "IBM Plex Mono",monospace;color:var(--muted)}
+    .boundary strong{color:var(--amber)}
+
+    .lower{display:grid;grid-template-columns:1.1fr .9fr;gap:clamp(18px,3vw,32px);margin-top:34px}
+    .panel{background:var(--surface);border-top:4px solid var(--ink);padding:20px 0 0}
+    .section-title{display:flex;justify-content:space-between;align-items:baseline;gap:16px;margin-bottom:16px}
+    .section-title h2{font-size:25px;margin:0}.section-title span{font:500 10px "IBM Plex Mono",monospace;color:var(--muted)}
+    .sequence{list-style:none;padding:0;margin:0;counter-reset:seq;display:grid;gap:1px;background:var(--rule);border:1px solid var(--rule)}
+    .sequence li{counter-increment:seq;background:var(--surface);padding:14px 16px 14px 55px;position:relative}
+    .sequence li::before{content:"0" counter(seq);position:absolute;left:16px;top:14px;font:600 12px "IBM Plex Mono",monospace;color:var(--green)}
+    .sequence strong{display:block;font-size:16px}.sequence span{font-size:13px;color:var(--muted)}
+    .trip-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:1px;background:var(--rule);border:1px solid var(--rule)}
+    .trip{background:var(--surface);padding:16px;min-width:0}
+    .trip code{display:block;font:600 11px "IBM Plex Mono",monospace;color:var(--red);margin-bottom:7px}
+    .trip>strong{display:block;font-size:18px;line-height:1.15;margin-bottom:12px}
+    .trip-trigger,.trip-reset{font-size:12px;line-height:1.45;margin:0;color:var(--muted)}
+    .trip-trigger{padding-bottom:10px;border-bottom:1px solid var(--rule)}
+    .trip-trigger b,.trip-reset b{font:600 10px "IBM Plex Mono",monospace;letter-spacing:.07em;color:var(--ink)}
+    .trip-actions{margin:10px 0;padding:0;list-style:none;counter-reset:tripstep;display:grid;gap:7px}
+    .trip-actions li{counter-increment:tripstep;position:relative;padding-left:28px;font-size:13px;line-height:1.35}
+    .trip-actions li::before{content:counter(tripstep);position:absolute;left:0;top:1px;width:18px;height:18px;border:1px solid var(--red);color:var(--red);font:600 10px/16px "IBM Plex Mono",monospace;text-align:center}
+    .trip-reset{padding-top:10px;border-top:1px solid var(--rule)}
+    .footer-note{display:flex;justify-content:space-between;gap:24px;border-top:1px solid var(--ink);margin-top:34px;padding-top:14px;font:500 10px/1.5 "IBM Plex Mono",monospace;color:var(--muted)}
+
+    @media (max-width:900px){
+      .topline{display:block}.revision{display:inline-block;margin-top:22px}.board{grid-template-columns:1fr}.detail{border-left:0;border-top:1px solid var(--ink)}.detail .spec-list{display:grid;grid-template-columns:repeat(3,1fr);gap:0 14px}.boundary{margin-top:18px}.lower{grid-template-columns:1fr}.mode-note{width:100%;margin:4px 0 0}.schematic{padding:8px}svg{min-height:460px}
+    }
+    @media (max-width:600px){
+      main{padding:16px 12px 30px}.topline{padding-bottom:16px}h1{font-size:38px}.lede{font-size:16px}.revision{box-shadow:4px 4px 0 var(--ink)}.modebar{align-items:stretch}.modebar-label{width:100%}.mode-btn{flex:1;padding:8px 5px;font-size:14px}.board{box-shadow:5px 5px 0 var(--shadow)}.schematic-head span{display:none}svg{min-height:0;aspect-ratio:720/710}.detail{padding:19px}.detail .spec-list{display:block}.trip-grid{grid-template-columns:1fr}.footer-note{display:block}.footer-note span{display:block;margin-top:7px}
+    }
+  </style>
+</head>
+<body>
+<main>
+  <header class="topline">
+    <div>
+      <p class="eyebrow">ASSEMBLY PC–01 · NOTIONAL DESIGN</p>
+      <h1>Contained plasma to regulated ship power.</h1>
+      <p class="lede">A serviceable core architecture for cruise, jump-charge, and safe shutdown. Select an operating state, then tap any component for its engineering role.</p>
+    </div>
+    <aside class="revision" aria-label="Drawing revision">
+      <strong>DWG PC–01 / REV A</strong>
+      <span>POWER CONVERSION</span>
+      <span>CONTROL: TRIPLE-CHANNEL</span>
+    </aside>
+  </header>
+
+  <nav class="modebar" aria-label="Operating state">
+    <span class="modebar-label">TRACE POWER FLOW</span>
+    <button class="mode-btn active" data-mode="cruise" aria-pressed="true">Cruise</button>
+    <button class="mode-btn" data-mode="jump" aria-pressed="false">Jump charge</button>
+    <button class="mode-btn" data-mode="safe" aria-pressed="false">Safe shutdown</button>
+    <span class="mode-note" id="modeNote">Continuous conversion feeds propulsion and the isolated ship-service buses.</span>
+  </nav>
+
+  <section class="board" aria-label="Interactive power core schematic">
+    <div class="schematic">
+      <div class="schematic-head"><strong>FUNCTIONAL ONE-LINE</strong><span>Tap a block to inspect · energized paths are highlighted</span></div>
+      <svg viewBox="0 0 720 710" role="img" aria-labelledby="svgTitle svgDesc">
+        <title id="svgTitle">Notional spacecraft power core functional schematic</title>
+        <desc id="svgDesc">A contained plasma chamber feeds thermal conversion, a high-voltage direct-current link, ship service buses, and a jump pulse capacitor bank, with protection and a dump load.</desc>
+
+        <!-- power paths -->
+        <path class="wire" data-modes="cruise jump" d="M115 103V165H210"/>
+        <path class="wire" data-modes="cruise jump" d="M300 235V270"/>
+        <path class="wire" data-modes="cruise jump" d="M300 410V444"/>
+        <path class="wire" data-modes="cruise jump" d="M300 508V542H165"/>
+        <path class="wire" data-modes="cruise" d="M165 542V586"/>
+        <path class="wire pulse" data-modes="jump" d="M382 476H480V542"/>
+        <path class="wire pulse" data-modes="jump" d="M555 606V655H382"/>
+        <path class="wire safe" data-modes="safe" d="M390 340H515"/>
+        <path class="wire safe" data-modes="safe" d="M590 396V450"/>
+        <path class="wire" data-modes="cruise jump safe" d="M115 165V450H210"/>
+
+        <text x="105" y="150" class="smalllabel">COLD START / BLACK BUS</text>
+        <text x="397" y="464" class="rail-label">1.8 kVDC PULSE LINK</text>
+        <text x="166" y="531" class="rail-label">270 VDC ESSENTIAL</text>
+
+        <!-- start bank -->
+        <g class="node" tabindex="0" role="button" data-id="start" aria-label="Cold-start bank">
+          <rect x="32" y="45" width="166" height="58"/>
+          <text x="48" y="65" class="tag">B–01</text>
+          <text x="48" y="85" class="name">Cold-start bank</text>
+          <text x="184" y="84" text-anchor="end" class="spec">28 VDC</text>
+        </g>
+
+        <!-- injector -->
+        <g class="node" tabindex="0" role="button" data-id="injector" aria-label="Fuel and plasma injector">
+          <polygon points="210,135 390,135 414,165 390,195 210,195"/>
+          <text x="228" y="156" class="tag">FI–11</text>
+          <text x="228" y="178" class="name">Plasma injector</text>
+        </g>
+
+        <!-- core -->
+        <g class="node" tabindex="0" role="button" data-id="core" aria-label="Magnetically contained plasma chamber">
+          <circle cx="300" cy="340" r="96" class="core-glow"/>
+          <circle cx="300" cy="340" r="70" class="core-ring"/>
+          <ellipse cx="300" cy="340" rx="111" ry="43" class="core-orbit" transform="rotate(27 300 340)"/>
+          <ellipse cx="300" cy="340" rx="111" ry="43" class="core-orbit" transform="rotate(-27 300 340)"/>
+          <text x="300" y="318" text-anchor="middle" class="tag">RC–01</text>
+          <text x="300" y="343" text-anchor="middle" class="name">Reaction chamber</text>
+          <text x="300" y="365" text-anchor="middle" class="spec">MAGNETIC CONFINEMENT</text>
+        </g>
+
+        <!-- thermal conversion -->
+        <g class="node" tabindex="0" role="button" data-id="converter" aria-label="Closed-loop thermal converter">
+          <rect x="218" y="444" width="164" height="64"/>
+          <text x="234" y="464" class="tag">TC–20</text>
+          <text x="234" y="486" class="name">Thermal converter</text>
+          <text x="366" y="487" text-anchor="end" class="spec">AC → DC</text>
+        </g>
+
+        <!-- bus -->
+        <g class="node" tabindex="0" role="button" data-id="bus">
+          <rect class="bus" x="75" y="586" width="180" height="70"/>
+          <text x="91" y="607" class="tag">PDU–A/B</text>
+          <text x="91" y="630" class="name">Ship-service buses</text>
+          <text x="91" y="646" class="spec">270 / 28 VDC · GALVANIC ISOLATION</text>
+        </g>
+
+        <!-- jump bank -->
+        <g class="node" tabindex="0" role="button" data-id="jump">
+          <rect class="hazard" x="480" y="542" width="150" height="64"/>
+          <text x="496" y="562" class="tag">CAP–J</text>
+          <text x="496" y="584" class="name">Jump pulse bank</text>
+          <text x="614" y="584" text-anchor="end" class="spec">ISOLATED</text>
+        </g>
+
+        <!-- field coupling -->
+        <g class="node" tabindex="0" role="button" data-id="field">
+          <polygon points="210,655 390,655 408,682 390,709 210,709 192,682"/>
+          <text x="218" y="676" class="tag">FC–01</text>
+          <text x="218" y="697" class="name">Field-coupling stage</text>
+        </g>
+
+        <!-- crowbar -->
+        <g class="node" tabindex="0" role="button" data-id="crowbar">
+          <rect x="515" y="298" width="150" height="98"/>
+          <text x="531" y="320" class="tag">CB–01</text>
+          <text x="531" y="343" class="name">Quench / crowbar</text>
+          <text x="531" y="362" class="spec">HARD-WIRED TRIP</text>
+          <text x="531" y="379" class="spec">&lt; CONTROL LOOP</text>
+        </g>
+
+        <!-- dump load -->
+        <g class="node" tabindex="0" role="button" data-id="dump">
+          <rect class="dump" x="515" y="450" width="150" height="58"/>
+          <text x="531" y="471" class="tag">DL–01</text>
+          <text x="531" y="492" class="name">External dump load</text>
+        </g>
+
+        <!-- telemetry -->
+        <g class="node" tabindex="0" role="button" data-id="control">
+          <rect x="495" y="45" width="190" height="120"/>
+          <text x="511" y="66" class="tag">PCS–03</text>
+          <text x="511" y="90" class="name">Protection controller</text>
+          <text x="511" y="113" class="spec">3× DIVERSE CHANNELS</text>
+          <text x="511" y="132" class="spec">2-OF-3 TRIP VOTE</text>
+          <text x="511" y="151" class="spec">FIBER COMMAND LINKS</text>
+        </g>
+        <path d="M590 165V278" class="wire" data-modes="cruise jump safe" style="stroke-dasharray:3 7"/>
+      </svg>
+    </div>
+
+    <aside class="detail" aria-live="polite">
+      <p class="detail-kicker" id="detailTag">RC–01 · SELECTED</p>
+      <h2 id="detailTitle">Reaction chamber</h2>
+      <p class="detail-desc" id="detailDesc">A replaceable vacuum vessel wrapped by independently powered superconducting confinement coils. It is the heat source—not the ship’s distribution bus.</p>
+      <dl class="spec-list">
+        <div><dt>INPUT</dt><dd id="detailInput">Metered fuel; injector bias; coil power</dd></div>
+        <div><dt>OUTPUT</dt><dd id="detailOutput">Thermal flux to TC–20</dd></div>
+        <div><dt>PROTECTION</dt><dd id="detailProtection">Fast dump, vacuum isolation, coil quench detection</dd></div>
+      </dl>
+      <p class="boundary"><strong>PHYSICS BOUNDARY</strong><br>The electrical distribution and protection scheme uses conventional engineering patterns. The spacetime field-coupling stage remains speculative; no known device can produce a jump.</p>
+    </aside>
+  </section>
+
+  <div class="lower">
+    <section class="panel">
+      <div class="section-title"><h2>Cold start → online</h2><span>AUTOMATIC SEQUENCE · MANUAL ABORT ANY STEP</span></div>
+      <ol class="sequence">
+        <li><strong>Wake the black bus</strong><span>B–01 energizes protection, vacuum pumps, valves, and independent instrumentation.</span></li>
+        <li><strong>Prove containment</strong><span>PCS–03 verifies vacuum, coolant flow, coil continuity, and all three trip channels.</span></li>
+        <li><strong>Spin and excite</strong><span>Converter auxiliaries reach speed; confinement coils ramp under current and temperature limits.</span></li>
+        <li><strong>Admit fuel</strong><span>FI–11 meters the minimum stable plasma. TC–20 establishes the 1.8 kVDC link unloaded.</span></li>
+        <li><strong>Close service buses</strong><span>PDU–A/B synchronize, test isolation, then accept ship loads in priority order.</span></li>
+      </ol>
+    </section>
+
+    <section class="panel">
+      <div class="section-title"><h2>Trips that do not ask permission</h2><span>ENERGY MUST HAVE A SAFE DESTINATION</span></div>
+      <div class="trip-grid">
+        <article class="trip">
+          <code>TRIP–01 · 86 LOCKOUT</code>
+          <strong>Containment drift</strong>
+          <p class="trip-trigger"><b>TRIGGER</b><br>Coil-current imbalance or plasma position drift past margin.</p>
+          <ol class="trip-actions">
+            <li>Block injection; valves fail closed.</li>
+            <li>Open core feed breaker 52–CORE.</li>
+            <li>Fire the coil crowbar; dump energy into the resistor bank.</li>
+            <li>Hold vacuum isolation.</li>
+          </ol>
+          <p class="trip-reset"><b>MANUAL RESET</b><br>Containment margin healthy.</p>
+        </article>
+        <article class="trip">
+          <code>TRIP–02 · 86 LOCKOUT</code>
+          <strong>Converter overspeed</strong>
+          <p class="trip-trigger"><b>TRIGGER</b><br>TC–20 above 115% speed; alarm at 110%.</p>
+          <ol class="trip-actions">
+            <li>Close the dump contactor; unload into DL–01 for dynamic braking.</li>
+            <li>Trip mechanical isolation.</li>
+            <li>Block reclose until speed decays.</li>
+          </ol>
+          <p class="trip-reset"><b>MANUAL RESET</b><br>Speed below 5% and DL–01 thermally healthy.</p>
+        </article>
+        <article class="trip">
+          <code>TRIP–03 · 86 LOCKOUT</code>
+          <strong>Bus ground fault</strong>
+          <p class="trip-trigger"><b>TRIGGER</b><br>64G ground overvoltage or 50G residual current.</p>
+          <ol class="trip-actions">
+            <li>Open bus-tie 52–TIE; split A/B.</li>
+            <li>Trip the faulted feeder.</li>
+            <li>Confirm zero-sequence current decays to zero.</li>
+            <li>Keep flight control on the healthy bus.</li>
+          </ol>
+          <p class="trip-reset"><b>MANUAL RESET</b><br>Clean insulation-resistance check.</p>
+        </article>
+        <article class="trip">
+          <code>TRIP–04 · 86 LOCKOUT</code>
+          <strong>Pulse-bank fault</strong>
+          <p class="trip-trigger"><b>TRIGGER</b><br>59 overvoltage, 87 bank differential, or pre-fire.</p>
+          <ol class="trip-actions">
+            <li>Block charging; contactors open and stay open.</li>
+            <li>Fire the bank crowbar.</li>
+            <li>Physically inhibit field-coupling contactors with the trapped key.</li>
+            <li>Keep hands clear until the bank reads below 50 V.</li>
+          </ol>
+          <p class="trip-reset"><b>MANUAL RESET</b><br>Voltage-safe and trapped key returned.</p>
+        </article>
+      </div>
+    </section>
+  </div>
+
+  <footer class="footer-note">
+    <div>DESIGN INTENT: SERVICEABLE MODULES · DE-ENERGIZED MAINTENANCE · FAIL-SAFE CONTACTORS</div>
+    <span>Ratings are architecture targets, not validated hardware specifications.</span>
+  </footer>
+</main>
+
+<script>
+  const components = {
+    start:{tag:'B–01 · COLD START',title:'Cold-start bank',desc:'A physically isolated 28 VDC battery string that can wake protection and cooling without relying on the core it is meant to supervise.',input:'Shore power or service charger',output:'28 VDC black bus',protection:'Pack contactors, cell monitoring, service disconnect'},
+    injector:{tag:'FI–11 · FUEL CONTROL',title:'Plasma injector',desc:'Meters fuel into the chamber only after vacuum, containment, and cooling permissives agree. Spring-return valves fail closed.',input:'Fuel supply; 28 VDC control',output:'Metered plasma stream',protection:'Dual series shutoff valves; purge; flow disagreement trip'},
+    core:{tag:'RC–01 · SELECTED',title:'Reaction chamber',desc:'A replaceable vacuum vessel wrapped by independently powered superconducting confinement coils. It is the heat source—not the ship’s distribution bus.',input:'Metered fuel; injector bias; coil power',output:'Thermal flux to TC–20',protection:'Fast dump, vacuum isolation, coil quench detection'},
+    converter:{tag:'TC–20 · GENERATION',title:'Thermal converter',desc:'A closed working-fluid loop turns chamber heat into shaft power, then a permanent-magnet machine and active rectifier establish the DC link.',input:'Core thermal loop',output:'Regulated 1.8 kVDC link',protection:'Overspeed trip, bypass valve, differential current'},
+    bus:{tag:'PDU–A/B · DISTRIBUTION',title:'Ship-service buses',desc:'Two galvanically isolated distribution sections. Critical flight and life-support loads are cross-tied; hotel loads shed first.',input:'1.8 kVDC link through isolated converters',output:'270 VDC propulsion; 28 VDC control',protection:'Zone-selective breakers, insulation monitoring, arc detection'},
+    jump:{tag:'CAP–J · PULSE ENERGY',title:'Jump pulse bank',desc:'A segmented capacitor bank accumulates energy slowly and releases one shaped pulse without pulling the service buses below ride-through voltage.',input:'Current-limited 1.8 kVDC charge',output:'High-current shaped pulse',protection:'Segment fuses, precharge, discharge resistors, grounded service wand'},
+    field:{tag:'FC–01 · SPECULATIVE',title:'Field-coupling stage',desc:'The placeholder interface between stored electrical energy and a proposed spacetime-field system. Its required physics and hardware are not presently known.',input:'Synchronized pulse from CAP–J',output:'Proposed stress-energy field',protection:'Physical inhibit, pulse abort, independent timing watchdogs'},
+    crowbar:{tag:'CB–01 · HARD-WIRED',title:'Quench / crowbar',desc:'An independent analog protection path that does not need software, network timing, or the main bus to put dangerous stored energy somewhere safe.',input:'Coil and DC-link fault sensors',output:'Trip contactors; divert energy',protection:'Normally energized relays; testable trip chain'},
+    dump:{tag:'DL–01 · ENERGY SINK',title:'External dump load',desc:'A sacrificial, thermally isolated resistor assembly sized to absorb converter and coil energy during an emergency shutdown.',input:'Diverted DC-link and coil energy',output:'Heat to external radiator',protection:'Temperature links; vented enclosure; replaceable elements'},
+    control:{tag:'PCS–03 · PROTECTION',title:'Protection controller',desc:'Three diverse channels compare independent sensors. Two agreeing channels trip; any one channel can block a jump charge.',input:'Isolated current, voltage, pressure, temperature',output:'Permissives, trips, event record',protection:'2-of-3 vote, fiber links, hardware watchdogs'}
+  };
+  const notes={
+    cruise:'Continuous conversion feeds propulsion and the isolated ship-service buses.',
+    jump:'Service loads hold while CAP–J charges through a current-limited pulse link.',
+    safe:'Fuel closes; stored magnetic and link energy diverts to the external dump load.'
+  };
+  const nodes=[...document.querySelectorAll('.node')];
+  function selectComponent(id){
+    const d=components[id]; if(!d)return;
+    nodes.forEach(n=>n.classList.toggle('selected',n.dataset.id===id));
+    document.getElementById('detailTag').textContent=d.tag;
+    document.getElementById('detailTitle').textContent=d.title;
+    document.getElementById('detailDesc').textContent=d.desc;
+    document.getElementById('detailInput').textContent=d.input;
+    document.getElementById('detailOutput').textContent=d.output;
+    document.getElementById('detailProtection').textContent=d.protection;
+  }
+  nodes.forEach(n=>{
+    n.addEventListener('click',()=>selectComponent(n.dataset.id));
+    n.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();selectComponent(n.dataset.id)}});
+  });
+  document.querySelectorAll('.mode-btn').forEach(btn=>btn.addEventListener('click',()=>{
+    const mode=btn.dataset.mode;
+    document.querySelectorAll('.mode-btn').forEach(b=>{const on=b===btn;b.classList.toggle('active',on);b.setAttribute('aria-pressed',String(on))});
+    document.querySelectorAll('.wire').forEach(w=>w.classList.toggle('active',(w.dataset.modes||'').split(' ').includes(mode)));
+    document.getElementById('modeNote').textContent=notes[mode];
+  }));
+  document.querySelector('.mode-btn.active').click();
+  selectComponent('core');
+</script>
+</body>
+</html>

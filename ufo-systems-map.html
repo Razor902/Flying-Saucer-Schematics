@@ -1,0 +1,245 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta name="color-scheme" content="light dark" />
+  <link rel="icon" href="data:," />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Condensed:wght@400;500;600&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <title>UFO Systems Map</title>
+  <style>
+    :root {
+      color-scheme: light dark;
+      --paper:#eef5f5; --ink:#0b262c; --muted:#526b70; --line:#9db4b7;
+      --panel:#f9fdfd; --panel2:#e2eeee; --grid:rgba(19,95,106,.08);
+      --cyan:#087f8f; --cyan-soft:#cdebed; --amber:#a65305; --amber-soft:#ffe3bf;
+      --red:#b02a32; --green:#1e6f56; --shadow:rgba(15,52,58,.12);
+    }
+    @media (prefers-color-scheme:dark){
+      :root{--paper:#071316;--ink:#d6f2f3;--muted:#8ba8ac;--line:#30545b;--panel:#0b1b1f;--panel2:#10272c;--grid:rgba(75,202,218,.055);--cyan:#56d7e4;--cyan-soft:#12373e;--amber:#ffb65e;--amber-soft:#422b13;--red:#ff747e;--green:#73d0aa;--shadow:rgba(0,0,0,.28)}
+    }
+    *{box-sizing:border-box}
+    html{background:var(--paper);scroll-behavior:smooth}
+    body{margin:0;color:var(--ink);font-family:"IBM Plex Sans Condensed",sans-serif;background-color:var(--paper);background-image:linear-gradient(var(--grid) 1px,transparent 1px),linear-gradient(90deg,var(--grid) 1px,transparent 1px);background-size:24px 24px;line-height:1.45}
+    button,a{font:inherit}
+    button{color:inherit}
+    .shell{width:min(1240px,100%);margin:auto;padding:clamp(18px,3vw,38px)}
+    .mast{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:24px;align-items:end;border-bottom:2px solid var(--ink);padding-bottom:18px}
+    .kicker{font:600 11px/1.2 "JetBrains Mono",monospace;letter-spacing:.13em;color:var(--cyan);text-transform:uppercase;margin-bottom:8px}
+    h1{font-size:clamp(32px,5vw,64px);font-weight:500;letter-spacing:-.045em;line-height:.94;margin:0;max-width:760px}
+    .intro{max-width:720px;color:var(--muted);font-size:clamp(16px,2vw,20px);margin:14px 0 0}
+    .rev{text-align:right;font:500 11px/1.8 "JetBrains Mono",monospace;color:var(--muted)}
+    .rev strong{display:block;color:var(--ink);font-size:13px}
+    .status-row{display:flex;flex-wrap:wrap;gap:8px;margin:18px 0 24px}
+    .legend{display:flex;gap:16px;flex-wrap:wrap;align-items:center;margin-left:auto;padding:6px 0;font:500 10px "JetBrains Mono",monospace;color:var(--muted)}
+    .legend i{display:inline-block;width:14px;height:3px;margin-right:6px;vertical-align:middle;background:var(--cyan)}
+    .legend i.amber{background:var(--amber)}
+    .legend i.dash{background:repeating-linear-gradient(90deg,var(--amber) 0 4px,transparent 4px 7px)}
+    .filter{border:1px solid var(--line);border-radius:3px;background:var(--panel);padding:8px 11px;cursor:pointer;font:500 11px "JetBrains Mono",monospace;transition:background .18s,border .18s,color .18s}
+    .filter:hover,.filter:focus-visible{border-color:var(--cyan);outline:none}
+    .filter.active{background:var(--ink);color:var(--paper);border-color:var(--ink)}
+    .workbench{display:grid;grid-template-columns:minmax(0,1fr) 318px;gap:18px;align-items:start}
+    .drawing,.inspector,.sequence,.rules,.source{background:var(--panel);border:1px solid var(--line);box-shadow:0 8px 30px var(--shadow)}
+    .drawing{padding:18px;min-width:0}
+    .drawing-head{display:flex;justify-content:space-between;gap:18px;align-items:start;margin-bottom:16px}
+    .drawing h2,.inspector h2,.sequence h2,.rules h2{margin:0;font-size:19px;font-weight:600;letter-spacing:-.01em}
+    .drawing-head p{margin:3px 0 0;color:var(--muted);font-size:13px}
+    .mono{font-family:"JetBrains Mono",monospace}
+    .bus{display:grid;gap:10px}
+    .power-source{display:grid;grid-template-columns:1fr auto 1fr;gap:10px;align-items:stretch}
+    .arrow{display:grid;place-items:center;color:var(--cyan);font:600 18px "JetBrains Mono",monospace;pointer-events:none}
+    .node{position:relative;text-align:left;border:1px solid var(--line);border-radius:3px;background:var(--panel);padding:12px;cursor:pointer;min-width:0;transition:opacity .18s,border-color .18s,background .18s,transform .18s}
+    .node:hover,.node:focus-visible{border-color:var(--cyan);outline:none;background:var(--cyan-soft)}
+    .node.selected{border:2px solid var(--cyan);padding:11px;background:var(--cyan-soft)}
+    .node.dim{opacity:.24}
+    .node.spec{border-color:var(--amber)}
+    .node.spec.selected{border-color:var(--amber);background:var(--amber-soft)}
+    .node .id{display:block;font:600 10px "JetBrains Mono",monospace;color:var(--muted);letter-spacing:.08em;margin-bottom:4px}
+    .node .name{display:block;font-size:16px;font-weight:600;line-height:1.12}
+    .node .desc{display:block;color:var(--muted);font-size:12px;line-height:1.25;margin-top:5px}
+    .source-node{border-color:var(--cyan);background:var(--cyan-soft)}
+    .pulse-node{border-color:var(--amber);background:var(--amber-soft)}
+    .trunk{position:relative;border:1px solid var(--cyan);background:var(--cyan-soft);padding:10px 13px;display:flex;justify-content:space-between;gap:12px;align-items:center}
+    .trunk:before,.trunk:after{content:"";position:absolute;left:50%;width:1px;height:11px;background:var(--cyan)}
+    .trunk:before{bottom:100%}.trunk:after{top:100%}
+    .trunk b{font:600 12px "JetBrains Mono",monospace}.trunk span{font:500 10px "JetBrains Mono",monospace;color:var(--muted)}
+    .subsystems{position:relative;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;padding-top:16px}
+    .subsystems:before{content:"";position:absolute;left:16.66%;right:16.66%;top:5px;border-top:1px solid var(--cyan)}
+    .subsystems>.branch{position:relative;display:grid;gap:10px;align-content:start}
+    .subsystems>.branch:before{content:"";position:absolute;left:50%;bottom:100%;height:11px;border-left:1px solid var(--cyan)}
+    .branch-title{font:600 10px "JetBrains Mono",monospace;letter-spacing:.1em;text-transform:uppercase;color:var(--cyan);padding:2px 3px}
+    .branch.warp .branch-title{color:var(--amber)}
+    .signal-spine{border-top:1px dashed var(--amber);margin:4px 0 0;padding-top:9px;display:flex;gap:7px;justify-content:space-between;align-items:center;color:var(--amber);font:500 10px "JetBrains Mono",monospace}
+    .inspector{position:sticky;top:16px;min-height:416px}
+    .inspect-top{padding:17px 18px 14px;border-bottom:1px solid var(--line)}
+    .inspect-id{font:600 10px "JetBrains Mono",monospace;color:var(--cyan);letter-spacing:.12em;text-transform:uppercase}
+    .inspect-title{font-size:27px;line-height:1;margin:7px 0 6px;font-weight:500;letter-spacing:-.03em}
+    .badge{display:inline-block;font:600 9px "JetBrains Mono",monospace;text-transform:uppercase;letter-spacing:.08em;padding:4px 6px;border:1px solid var(--line);border-radius:2px;color:var(--muted)}
+    .badge.spec{color:var(--amber);border-color:var(--amber)}
+    .inspect-body{padding:16px 18px}
+    .inspect-body p{margin:0 0 15px;color:var(--muted);font-size:14px}
+    .inspect-body h3{font:600 10px "JetBrains Mono",monospace;letter-spacing:.1em;text-transform:uppercase;margin:16px 0 7px;color:var(--ink)}
+    .inspect-body ul{list-style:none;padding:0;margin:0;display:grid;gap:7px}
+    .inspect-body li{position:relative;padding-left:14px;font-size:13px}.inspect-body li:before{content:"";position:absolute;left:0;top:.58em;width:6px;border-top:2px solid var(--cyan)}
+    .inspect-body li.specbullet:before{border-color:var(--amber)}
+    .dependency{font:500 10px/1.55 "JetBrains Mono",monospace;padding:9px;background:var(--panel2);border-left:2px solid var(--cyan)}
+    .lower{display:grid;grid-template-columns:1.2fr .8fr;gap:18px;margin-top:18px}
+    .sequence,.rules{padding:20px}
+    .sequence>p,.rules>p{color:var(--muted);font-size:14px;margin:5px 0 18px}
+    .steps{display:grid;grid-template-columns:repeat(5,1fr);gap:0}
+    .step{position:relative;padding:14px 12px 12px;border-top:2px solid var(--amber);background:var(--amber-soft);min-height:132px}
+    .step:not(:last-child){border-right:1px solid var(--line)}
+    .step .num{font:600 10px "JetBrains Mono",monospace;color:var(--amber)}
+    .step b{display:block;margin:8px 0 5px;font-size:14px}
+    .step span{font-size:12px;color:var(--muted)}
+    .rules-list{display:grid;gap:0;border-top:1px solid var(--line)}
+    .rule{display:grid;grid-template-columns:38px 1fr;gap:9px;padding:11px 0;border-bottom:1px solid var(--line)}
+    .rule code{font:600 10px "JetBrains Mono",monospace;color:var(--cyan)}
+    .rule b{font-size:14px}.rule p{margin:2px 0 0;color:var(--muted);font-size:12px}
+    .note{margin-top:18px;padding:14px 16px;border:1px solid var(--amber);background:var(--amber-soft);font-size:13px}
+    .note strong{color:var(--amber)}
+    .source{margin-top:18px;padding:14px 17px;display:flex;gap:14px;align-items:center;justify-content:space-between;color:var(--muted);font-size:12px}
+    .source a{color:var(--cyan);text-decoration-thickness:1px;text-underline-offset:3px}
+    @media(max-width:900px){.workbench{grid-template-columns:1fr}.inspector{position:relative;top:0;min-height:0}.lower{grid-template-columns:1fr}.legend{margin-left:0;width:100%}}
+    @media(max-width:640px){.shell{padding:16px}.mast{grid-template-columns:1fr}.rev{text-align:left;border-top:1px solid var(--line);padding-top:9px;display:flex;gap:14px}.status-row{margin-top:14px}.filter{flex:1 1 43%;padding:9px 6px}.drawing{padding:12px}.drawing-head{display:block}.drawing-head .mono{display:block;margin-top:7px}.power-source{grid-template-columns:1fr}.power-source .arrow{height:10px;transform:rotate(90deg)}.subsystems{grid-template-columns:1fr;padding-top:12px}.subsystems:before,.subsystems>.branch:before{display:none}.branch{padding-top:9px;border-top:1px solid var(--cyan)}.branch.warp{border-top-color:var(--amber)}.steps{grid-template-columns:1fr}.step{min-height:0;border-right:0!important;border-bottom:1px solid var(--line)}.source{display:block}.source a{display:inline-block;margin-top:8px}.trunk{align-items:flex-start;flex-direction:column}.node{padding:14px}.node.selected{padding:13px}}
+    @media(prefers-reduced-motion:reduce){*{scroll-behavior:auto!important;transition:none!important}}
+  </style>
+</head>
+<body>
+<main class="shell">
+  <header class="mast">
+    <div>
+      <div class="kicker">Preliminary architecture / electrical one-line</div>
+      <h1>Craft-wide functional architecture</h1>
+      <p class="intro">A relative systems map for a disc craft: real distribution, protection, controls, and life-safety downstream of one deliberately speculative subsystem.</p>
+    </div>
+    <div class="rev"><strong>DWG UFS-001</strong>REV 0.2<br>CONCEPT / NOT FOR BUILD</div>
+  </header>
+
+  <div class="status-row" role="group" aria-label="Highlight systems by operating path">
+    <button class="filter active" data-filter="all">FULL CRAFT</button>
+    <button class="filter" data-filter="power">POWER PATH</button>
+    <button class="filter" data-filter="flight">LOCAL FLIGHT</button>
+    <button class="filter" data-filter="warp">SPACETIME JUMP</button>
+    <button class="filter" data-filter="habitat">CREW SURVIVAL</button>
+    <div class="legend"><span><i></i> established engineering</span><span><i class="amber"></i> speculative hardware</span><span><i class="dash"></i> command/data</span></div>
+  </div>
+
+  <div class="workbench">
+    <section class="drawing" aria-labelledby="map-title">
+      <div class="drawing-head">
+        <div><h2 id="map-title">System one-line</h2><p>Select any block to inspect its interfaces and protection.</p></div>
+        <span class="mono" style="font-size:10px;color:var(--muted)">POWER → LOAD / SIGNAL ⇢ CONTROL</span>
+      </div>
+      <div class="bus" id="systemMap">
+        <div class="power-source">
+          <button class="node source-node" data-id="PWR-01" data-tags="power flight warp habitat">
+            <span class="id">PWR-01 • PRIMARY SOURCE</span><span class="name">Reactor / generator set</span><span class="desc">Steady-state generation; isolated, shielded, separately cooled.</span>
+          </button>
+          <div class="arrow" aria-hidden="true">→</div>
+          <button class="node pulse-node spec" data-id="PWR-02" data-tags="power warp">
+            <span class="id">PWR-02 • PULSE RESERVE</span><span class="name">Jump energy bank</span><span class="desc">Dedicated buffered jump feed. Rating: TBD until field energy, pulse width, and waveform are defined.</span>
+          </button>
+        </div>
+        <div class="trunk"><b>HVDC SPLIT BUS • A / B</b><span>GALVANIC ISOLATION · CURRENT LIMIT · GROUND-FAULT MONITOR</span></div>
+        <div class="subsystems">
+          <div class="branch">
+            <div class="branch-title">Mobility loads</div>
+            <button class="node" data-id="PRO-01" data-tags="power flight"><span class="id">PRO-01 • CONVENTIONAL</span><span class="name">Local-flight propulsion</span><span class="desc">Distributed thrust, vector control, motor inverters.</span></button>
+            <button class="node" data-id="FCS-01" data-tags="power flight"><span class="id">FCS-01 • FLIGHT CRITICAL</span><span class="name">Flight control</span><span class="desc">Triplex control lanes, inertial reference, effectors.</span></button>
+            <button class="node" data-id="LND-01" data-tags="power flight"><span class="id">LND-01 • GROUND OPS</span><span class="name">Landing & handling</span><span class="desc">Retractable gear, jacks, brakes, ground-power inlet.</span></button>
+            <button class="node" data-id="STR-01" data-tags="flight warp habitat"><span class="id">STR-01 • PRIMARY STRUCTURE</span><span class="name">Pressure hull & frame</span><span class="desc">Pressure vessel, thrust ring, isolation mounts.</span></button>
+          </div>
+          <div class="branch warp">
+            <div class="branch-title">Spacetime-jump loads</div>
+            <button class="node spec" data-id="WRP-01" data-tags="power warp"><span class="id">WRP-01 • SPECULATIVE PHYSICS</span><span class="name">Warp field coil array</span><span class="desc">Distributed ring segments shape the prescribed field geometry.</span></button>
+            <button class="node spec" data-id="WRP-02" data-tags="power warp"><span class="id">WRP-02 • SPECULATIVE PHYSICS</span><span class="name">Exotic-energy containment</span><span class="desc">Conceptual source and confinement for required stress-energy.</span></button>
+            <button class="node spec" data-id="WRP-03" data-tags="power warp"><span class="id">WRP-03 • PULSE POWER</span><span class="name">Jump power conditioner</span><span class="desc">Charge, commutate, and balance pulse energy across coil sectors.</span></button>
+            <button class="node" data-id="WRP-04" data-tags="warp"><span class="id">WRP-04 • HARDWIRED SAFETY</span><span class="name">Warp interlock controller</span><span class="desc">Two-key arm, navigation proof, quench path, safe inhibit.</span></button>
+          </div>
+          <div class="branch">
+            <div class="branch-title">Mission & crew loads</div>
+            <button class="node" data-id="NAV-01" data-tags="power flight warp"><span class="id">NAV-01 • PNT / TIMING</span><span class="name">Navigation & jump sync</span><span class="desc">Inertial, optical, star fix, ephemeris, precision clocks.</span></button>
+            <button class="node" data-id="SNS-01" data-tags="power flight warp"><span class="id">SNS-01 • SITUATIONAL</span><span class="name">Sensors & communications</span><span class="desc">Radar/lidar, optical, RF links, health telemetry.</span></button>
+            <button class="node" data-id="ECL-01" data-tags="power habitat"><span class="id">ECL-01 • ESSENTIAL</span><span class="name">Life support</span><span class="desc">Atmosphere, water, fire detection, pressure control.</span></button>
+            <button class="node" data-id="THM-01" data-tags="power flight warp habitat"><span class="id">THM-01 • HEAT REJECTION</span><span class="name">Thermal management</span><span class="desc">Independent coolant loops, heat storage, deployable radiators.</span></button>
+          </div>
+        </div>
+        <div class="signal-spine"><span>FLIGHT / MISSION DATA BUS</span><span>DUAL-REDUNDANT FIBER</span><span>HARDWIRE TRIPS OVERRIDE SOFTWARE</span></div>
+      </div>
+    </section>
+
+    <aside class="inspector" aria-live="polite" aria-labelledby="inspectTitle">
+      <div class="inspect-top">
+        <div class="inspect-id" id="inspectId">PWR-01 • PRIMARY SOURCE</div>
+        <div class="inspect-title" id="inspectTitle">Reactor / generator set</div>
+        <span class="badge" id="inspectBadge">Established engineering</span>
+      </div>
+      <div class="inspect-body">
+        <p id="inspectDesc">Continuous electrical source feeding both split HVDC buses. The exact prime mover is unresolved; architecture assumes a compact high-energy source with remote shutdown and dedicated shielding.</p>
+        <h3>Internal blocks</h3><ul id="inspectBlocks"></ul>
+        <h3>Protection & control</h3><ul id="inspectProtection"></ul>
+        <h3>Depends on / feeds</h3><div class="dependency" id="inspectDependency"></div>
+      </div>
+    </aside>
+  </div>
+
+  <div class="lower">
+    <section class="sequence">
+      <h2>Spacetime-jump permissive chain</h2>
+      <p>The jump request is a state machine, not one switch. Every gate must prove healthy before pulse release.</p>
+      <div class="steps">
+        <div class="step"><span class="num">01 / SOLVE</span><b>Trajectory lock</b><span>Navigation solution, exclusion volume, arrival frame, clock agreement.</span></div>
+        <div class="step"><span class="num">02 / ISOLATE</span><b>Load shed</b><span>Open nonessential feeders; reserve A/B essential buses and thermal pumps.</span></div>
+        <div class="step"><span class="num">03 / CHARGE</span><b>Pulse bank ready</b><span>Pre-charge, insulation test, cell balance, containment proof.</span></div>
+        <div class="step"><span class="num">04 / SHAPE</span><b>Coils synchronized</b><span>Sector continuity, phase agreement, field model within tolerance.</span></div>
+        <div class="step"><span class="num">05 / COMMIT</span><b>Two-key release</b><span>Hardware vote closes pulse contactors; any trip dumps to the quench load.</span></div>
+      </div>
+      <div class="note"><strong>Physics boundary:</strong> Alcubierre’s metric is a mathematical spacetime geometry, not a demonstrated propulsion device. No known method can create, contain, steer, or safely collapse the required negative-energy distribution. WRP-01 and WRP-02 are therefore placeholders for unresolved physics; the switching, segmentation, fault containment, and interlocks around them use ordinary engineering practice.</div>
+    </section>
+
+    <section class="rules">
+      <h2>Non-negotiable design rules</h2>
+      <p>These decisions keep one failure from becoming a craft-wide loss.</p>
+      <div class="rules-list">
+        <div class="rule"><code>R-01</code><div><b>No single energized hull return</b><p>Use controlled bonding and monitored return conductors; isolate noisy pulse loads.</p></div></div>
+        <div class="rule"><code>R-02</code><div><b>Essential bus survives source loss</b><p>Independent battery supports flight control, navigation, comms, and atmosphere.</p></div></div>
+        <div class="rule"><code>R-03</code><div><b>Warp branch is normally open</b><p>Physically separated contactors and discharge path; no software-only inhibit.</p></div></div>
+        <div class="rule"><code>R-04</code><div><b>Heat is a first-class load</b><p>Every power conversion block closes its thermal path before energization.</p></div></div>
+        <div class="rule"><code>R-05</code><div><b>Graceful degradation</b><p>Sector faults isolate locally; craft retains attitude, comms, and life support.</p></div></div>
+      </div>
+    </section>
+  </div>
+
+  <footer class="source">
+    <span><b>Scientific basis:</b> the warp subsystem follows the Alcubierre metric as a design thought experiment; all claimed hardware beyond conventional power and controls remains speculative.</span>
+    <a href="https://arxiv.org/abs/gr-qc/0009013v1" target="_blank" rel="noopener">Read Alcubierre’s paper ↗</a>
+  </footer>
+</main>
+<script>
+const data={
+"PWR-01":{id:"PWR-01 • PRIMARY SOURCE",title:"Reactor / generator set",kind:"Established engineering",desc:"Continuous electrical source feeding both split HVDC buses. The exact prime mover is unresolved; architecture assumes a compact high-energy source with remote shutdown and dedicated shielding.",blocks:["Prime mover and generator","Rectifier / DC link","Shielding and service enclosure"],protect:["Differential and overcurrent trips","Independent emergency shutdown","A/B feeder isolation contactors"],dep:"Needs THM-01 cooling • Feeds HVDC A/B and PWR-02"},
+"PWR-02":{id:"PWR-02 • PULSE RESERVE",title:"Jump energy bank",kind:"Speculative integration",spec:true,desc:"A dedicated intermediate store separates the jump pulse from the slower primary generator. Its voltage, energy, peak power, pulse duration, conductor ampacity, and interrupting duty are intentionally marked TBD: they cannot be sized until WRP-01/02 define a credible field-energy waveform.",blocks:["Segmented storage modules — rating TBD","Dedicated parallel feed — voltage/current TBD","Pre-charge, balance, and quench network"],protect:["Arc-flash zoning and remote service","Cell-level fusing and isolation","Discharge-to-safe voltage verification"],dep:"Charged by PWR-01 • Feeds WRP-03 • Rejects heat through THM-01"},
+"PRO-01":{id:"PRO-01 • CONVENTIONAL",title:"Local-flight propulsion",kind:"Established architecture",desc:"Provides takeoff, landing, atmospheric maneuvering, and sublight translation without relying on warp physics. The final propulsor type remains a trade study.",blocks:["Distributed motor drives","Vectorable thrust modules","Regenerative braking path"],protect:["Per-sector inverter isolation","Overspeed and overtemperature trips","Cross-fed control power only"],dep:"Fed by HVDC A/B • Commanded by FCS-01 • Cooled by THM-01"},
+"FCS-01":{id:"FCS-01 • FLIGHT CRITICAL",title:"Flight control",kind:"Established engineering",desc:"Triplex, independently powered control lanes vote on attitude and thrust commands. A degraded lane can be isolated without losing basic control.",blocks:["Three dissimilar compute lanes","Inertial reference units","Actuator interface units"],protect:["2-of-3 command voting","Watchdog and reasonableness checks","Manual reversion for safe landing"],dep:"Uses NAV-01/SNS-01 • Commands PRO-01/LND-01 • Essential-bus load"},
+"LND-01":{id:"LND-01 • GROUND OPS",title:"Landing & handling",kind:"Established engineering",desc:"Supports ground contact, leveling, braking, towing, and maintenance power. It stays electrically separate from propulsion except for supervised interlocks.",blocks:["Retractable landing assemblies","Electromechanical jacks and brakes","External power and service panel"],protect:["Weight-on-gear interlocks","Mechanical uplocks","Ground-fault-protected service power"],dep:"Fed by utility bus • Status to FCS-01"},
+"STR-01":{id:"STR-01 • PRIMARY STRUCTURE",title:"Pressure hull & frame",kind:"Established engineering",desc:"The load path combines a pressure cabin with a circumferential thrust and equipment ring. Sensitive crew spaces mount inside vibration and pulse isolation zones.",blocks:["Pressure vessel","Circumferential primary frame","Equipment bays and shielding"],protect:["Leak-before-burst inspection strategy","Crack and strain monitoring","Fire and pressure-zone separation"],dep:"Carries all systems • Interfaces with THM-01 and ECL-01"},
+"WRP-01":{id:"WRP-01 • SPECULATIVE PHYSICS",title:"Warp field coil array",kind:"Speculative physics",spec:true,desc:"A segmented circumferential array is the conceptual actuator for a prescribed spacetime field. No known coil or material can produce the required metric; segmentation is an engineering assumption for control and fault isolation.",blocks:["Fore/aft gradient sectors","Circumferential field segments","Local current and field sensing"],protect:["Sector-by-sector contactors","Synchronized firing window","Fast quench on asymmetry"],dep:"Fed by WRP-03 • Setpoints from WRP-04 • Geometry from NAV-01"},
+"WRP-02":{id:"WRP-02 • SPECULATIVE PHYSICS",title:"Exotic-energy containment",kind:"Speculative physics",spec:true,desc:"Placeholder for generating and confining the stress-energy distribution demanded by an Alcubierre-type metric. Exotic matter with usable negative energy density has not been demonstrated at engineering scale.",blocks:["Unresolved energy source","Containment boundary","Density-distribution sensor model"],protect:["Normally isolated from crew zones","Independent containment proof","Automatic inhibit on model divergence"],dep:"Conditioned by WRP-03 • Monitored by WRP-04 • Physics unresolved"},
+"WRP-03":{id:"WRP-03 • PULSE POWER",title:"Jump power conditioner",kind:"Speculative load / real topology",spec:true,desc:"Converts stored energy into synchronized, limited pulses for field sectors. The electrical topology is plausible; its actual voltage, current, waveform, and insulation class cannot be sized until the physics load is known.",blocks:["Pre-charge stage","Solid-state commutation","Per-sector pulse-forming networks"],protect:["Desaturation / overcurrent trip","Crowbar and dump path","Timing-skew inhibit"],dep:"Fed by PWR-02 • Feeds WRP-01/02 • Cooled by THM-01"},
+"WRP-04":{id:"WRP-04 • HARDWIRED SAFETY",title:"Warp interlock controller",kind:"Established safety pattern",desc:"A dedicated safety controller owns the arm, fire, abort, and discharge chain. Mission software may request a jump but cannot bypass hardwired permissives.",blocks:["Dual safety PLC lanes","Two-key human authorization","Independent trip and event recorder"],protect:["De-energize-to-safe outputs","Hardwired quench command","Proof-of-open feedback on every contactor"],dep:"Validates NAV-01, PWR-02, WRP-01/02/03, THM-01 • Releases jump pulse"},
+"NAV-01":{id:"NAV-01 • PNT / TIMING",title:"Navigation & jump sync",kind:"Established sensors / speculative solution",desc:"Fuses inertial and optical observations for ordinary flight. For a jump it would also have to solve bubble trajectory, arrival frame, exclusion volume, and sub-microsecond sector timing.",blocks:["Inertial navigation units","Star tracker / optical nav","Precision clock ensemble"],protect:["Independent solution cross-check","Stale-data and divergence trips","Jump inhibited without clock agreement"],dep:"Reads SNS-01 • Guides FCS-01 • Provides jump solution to WRP-04"},
+"SNS-01":{id:"SNS-01 • SITUATIONAL",title:"Sensors & communications",kind:"Established engineering",desc:"Maintains awareness and communication in normal flight. Sensor apertures are distributed so no single sector or field disturbance blinds the craft.",blocks:["Optical and infrared arrays","Radar / lidar apertures","RF and optical communication links"],protect:["Surge and radiation hardening","Aperture isolation shutters","Independent emergency beacon"],dep:"Feeds NAV-01/FCS-01 • Uses essential and mission buses"},
+"ECL-01":{id:"ECL-01 • ESSENTIAL",title:"Life support",kind:"Established engineering",desc:"Controls cabin pressure, atmosphere, humidity, water recovery, and fire response. It is an essential-bus load with local survival reserves.",blocks:["Oxygen and carbon-dioxide control","Water recovery and storage","Pressure zones and fire suppression"],protect:["Isolatable pressure compartments","Local oxygen and battery reserve","Toxic-gas and smoke detection"],dep:"Fed by essential bus • Needs THM-01 • Contained by STR-01"},
+"THM-01":{id:"THM-01 • HEAT REJECTION",title:"Thermal management",kind:"Established engineering",desc:"Collects, buffers, and rejects heat from continuous and pulse loads. In space, heat rejection—not raw generation—is likely to constrain sustained power.",blocks:["Independent coolant loops","Phase-change heat buffer","Shielded deployable radiators"],protect:["Leak isolation by zone","Pump cross-strapping","Pulse inhibited without verified heat sink"],dep:"Serves PWR-01, PWR-02, PRO-01, WRP-03, ECL-01"}
+};
+const nodes=[...document.querySelectorAll('.node')];
+function inspect(id){const d=data[id];if(!d)return;nodes.forEach(n=>n.classList.toggle('selected',n.dataset.id===id));document.getElementById('inspectId').textContent=d.id;document.getElementById('inspectTitle').textContent=d.title;const b=document.getElementById('inspectBadge');b.textContent=d.kind;b.className='badge'+(d.spec?' spec':'');document.getElementById('inspectDesc').textContent=d.desc;document.getElementById('inspectBlocks').innerHTML=d.blocks.map(x=>`<li class="${d.spec?'specbullet':''}">${x}</li>`).join('');document.getElementById('inspectProtection').innerHTML=d.protect.map(x=>`<li>${x}</li>`).join('');document.getElementById('inspectDependency').textContent=d.dep;}
+nodes.forEach(n=>n.addEventListener('click',()=>inspect(n.dataset.id)));
+document.querySelectorAll('.filter').forEach(btn=>btn.addEventListener('click',()=>{document.querySelectorAll('.filter').forEach(b=>b.classList.toggle('active',b===btn));const f=btn.dataset.filter;nodes.forEach(n=>n.classList.toggle('dim',f!=='all'&&!n.dataset.tags.split(' ').includes(f)));if(f!=='all'){const first=nodes.find(n=>n.dataset.tags.split(' ').includes(f));if(first)inspect(first.dataset.id);}}));
+inspect('PWR-01');
+</script>
+</body>
+</html>
