@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>The Hand-in-Hand Engine &mdash; Interactive Schematic</title>
+<link rel="stylesheet" href="schematic.css">
+</head>
+<body>
+
+<nav class="back"><a href="index.html">&larr; All schematics</a></nav>
+
+<header class="page-head">
+  <h1>The Hand-in-Hand Engine</h1>
+  <p class="sub">Combined schematic &mdash; Genome-Weaving Engine + Quantum Processor Deciphering Engine + Conjunction Chamber.<br>
+  <em>Disegno alchemico-mechanico ad coniungendum materiam et computationem</em> &mdash; Anno MMXXIV &bull; Scala 1:48 &bull; Proprietas Secreti</p>
+</header>
+
+<div class="schematic-wrap">
+  <aside class="component-list" id="component-list" aria-label="Components">
+    <h3>Components</h3>
+  </aside>
+
+  <div class="stage-col">
+    <div class="toolbar">
+      <button id="zoom-in" aria-label="Zoom in">+</button>
+      <button id="zoom-out" aria-label="Zoom out">&minus;</button>
+      <button id="zoom-reset" aria-label="Reset view">&#10226;</button>
+      <span class="hint">Drag to pan &bull; scroll to zoom &bull; tap a gold marker</span>
+    </div>
+    <div class="stage" id="stage">
+      <div class="canvas" id="canvas">
+        <img class="blueprint" src="hand-in-hand-engine.png" alt="Hand-in-Hand Engine blueprint">
+      </div>
+    </div>
+  </div>
+</div>
+
+<aside class="detail" id="detail" aria-label="Component details">
+  <button class="close" id="detail-close" aria-label="Close">&times;</button>
+  <div id="detail-body"></div>
+</aside>
+
+<section class="principle">
+  <h2>Working Notes, as written on the draft</h2>
+  <blockquote>
+    <strong>NOTA:</strong> Coniunctio genome et quanta per aetherem permittit computationem geneticam &amp; weaving materialis.<br>
+    <strong>CAVE:</strong> Stabilizare aetherem ne disrupio.
+  </blockquote>
+  <h2>Observationes</h2>
+  <ol>
+    <li>Synchronise helix rotatio ante ignitionem.</li>
+    <li>Serva vacuum in campana vitrea.</li>
+    <li>Balance aether in conjunctione ad 0.5 flux.</li>
+  </ol>
+</section>
+
+<footer>
+  Transcribed from the draft, word for word. Nothing added, nothing invented.
+</footer>
+
+<script>
+var COMPONENTS = [
+  { id: 'tungsten', name: 'Tungsten Helix Coils', latin: 'Filum Tungsteni',
+    specs: ['144 Vincoli'], x: 20, y: 33 },
+  { id: 'frigus', name: 'Frigus Conductus', latin: '',
+    specs: ['Refrigeratio Ad -20\u00B0C'], x: 28, y: 25 },
+  { id: 'dna', name: 'DNA Helix Gears', latin: '',
+    specs: ['Ratio 13:21', 'Passo 6mm', 'Rotatio Synchrona', '\u00D8 prim. 30mm', '\u00D8 sec. 18mm'], x: 21, y: 53 },
+  { id: 'transmutation', name: 'Transmutation Chamber', latin: 'Vessel Alchymicus',
+    specs: ['Forgenda Sequentia Genomica', 'Ventilus Catalyticus', 'Pressio: 1.2 atm', 'Catalysis: Sal Alchymicus', 'Temp: 37.5\u00B0C'], x: 20, y: 67 },
+  { id: 'conduit', name: 'Shared Aether Conduit', latin: 'Aetherea Canalis',
+    specs: ['Transmissio Conjuncta'], x: 36, y: 38 },
+  { id: 'conjunction', name: 'Conjunction Chamber', latin: 'Locus Conjunctionis',
+    specs: ['Where Genome & Quantum Power Meet'], x: 47, y: 49 },
+  { id: 'flux', name: 'Aether Flux', latin: '',
+    specs: ['Synthesis Conjuncta', 'Synthesis Punctum', 'Energia Conjuncta', 'Brass Gear Coupling \u2014 24 tooth', 'Interlock Mediator'], x: 42, y: 61 },
+  { id: 'equilibrium', name: 'Equilibrium Point', latin: '',
+    specs: ['Coniunctio: DNA+QBIT \u2190 AETHER \u2192 Processus Unificatus'], x: 52, y: 67 },
+  { id: 'regulator', name: 'Regulator / Balancer', latin: 'Valva Aetherea',
+    specs: ['Moderator Fluxus', 'Pressio Equalis'], x: 47, y: 73 },
+  { id: 'claws', name: 'Cryogenic Claws', latin: 'Unguis Cryogenicus',
+    specs: ['Articulatio 3-Fingris', 'Refrigerans Liq. N2', 'Temp: -196\u00B0C', 'Pinza Quantum Capture'], x: 78, y: 26 },
+  { id: 'resonator', name: 'Resonator Coil Array', latin: '',
+    specs: ['7 Nodes', 'Frequentia: 9.42 MHz', 'Harmonica Resonantia', 'Spire: 24', 'Spacing 4mm'], x: 80, y: 52 },
+  { id: 'belljar', name: 'Glass Bell Jar', latin: 'Campana Vitrea',
+    specs: ['Vacuum 0.01 bar', 'Observatio Camera', 'Quantum Qubit Core', 'Superpositio Matrix', 'Seal Hermeticus', 'Fenestra Observationis'], x: 82, y: 74 }
+];
+</script>
+<script src="schematic.js"></script>
+
+</body>
+</html>

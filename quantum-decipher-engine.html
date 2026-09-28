@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>The Quantum Decipher Engine &mdash; Interactive Schematic</title>
+<link rel="stylesheet" href="schematic.css">
+</head>
+<body>
+
+<nav class="back"><a href="index.html">&larr; All schematics</a></nav>
+
+<header class="page-head">
+  <h1>The Quantum Decipher Engine</h1>
+  <p class="sub">Alchemical Schematic No. QDE-VII &mdash; for the disassembly &amp; deciphering of the quantum processor chip.<br>
+  Draft II &bull; Anno 1899 &bull; Scale 1:12 &bull; Drawn by: Hand of Engineer, Guild of Alchemico-Mechanical Arts &bull; Date: 17th Nov. 1899</p>
+</header>
+
+<div class="schematic-wrap">
+  <aside class="component-list" id="component-list" aria-label="Components">
+    <h3>Components</h3>
+  </aside>
+
+  <div class="stage-col">
+    <div class="toolbar">
+      <button id="zoom-in" aria-label="Zoom in">+</button>
+      <button id="zoom-out" aria-label="Zoom out">&minus;</button>
+      <button id="zoom-reset" aria-label="Reset view">&#10226;</button>
+      <span class="hint">Drag to pan &bull; scroll to zoom &bull; tap a gold marker</span>
+    </div>
+    <div class="stage" id="stage">
+      <div class="canvas" id="canvas">
+        <img class="blueprint" src="quantum-decipher-engine.png" alt="Quantum Decipher Engine blueprint">
+      </div>
+    </div>
+  </div>
+</div>
+
+<aside class="detail" id="detail" aria-label="Component details">
+  <button class="close" id="detail-close" aria-label="Close">&times;</button>
+  <div id="detail-body"></div>
+</aside>
+
+<section class="principle">
+  <h2>Principium Operandi &mdash; the operating principle, as written on the draft</h2>
+  <ol>
+    <li>Cryogenic Claw extracts qubit from chip under cryo conditions.</li>
+    <li>Superposition Unraveller Array collapses probabilistic state via resonant coils.</li>
+    <li>Entanglement Shears <em>[partially legible on the draft]</em> preserves state against decoherence.</li>
+    <li>Decipher Dial calibrates quantum gate sequence for readout.</li>
+    <li><em>Illegible on the draft.</em></li>
+    <li>Containment Bell Jar <em>[partially legible on the draft]</em> residual probability wave for archival analysis.</li>
+  </ol>
+  <h2>Notae et Monitiones</h2>
+  <ol>
+    <li>Maintain temp below -268&deg;C to prevent decoherence</li>
+    <li>Bell jar seal must be airtight</li>
+    <li>Alignment of resonators critical for coherent readout</li>
+    <li>Treat all entangled material as sensitive</li>
+  </ol>
+</section>
+
+<footer>
+  Transcribed from the draft, word for word. Nothing added, nothing invented.
+</footer>
+
+<script>
+var COMPONENTS = [
+  { id: 'claw', name: 'Cryogenic Qubit Extraction Claw', latin: '',
+    specs: ['Arm Span: 12.4 cm', 'Cryo-Temp: -269\u00B0C', 'Extracts & stabilises qubit via liquid helium conduit'], x: 16, y: 26 },
+  { id: 'unraveller', name: 'Superposition Unraveller Array', latin: '',
+    specs: ['Resonant Coil Array | 6x Helical Resonators', 'Spacing: 1.8 cm', 'Unravels superposition state via phased interference waves'], x: 42, y: 28 },
+  { id: 'shears', name: 'Entanglement Severing Shears', latin: '',
+    specs: ['Brass Lever Actuator', 'Severing Jaw: Hardened Steel', 'Cuts quantum entanglement link', 'Caution: Handle with insulated grip'], x: 83, y: 26 },
+  { id: 'dial', name: 'Quantum Gate Decipher Dial', latin: '',
+    specs: ['Gating Sequence: I\u2192H\u2192CNOT\u2192', 'Dial Precision: \u00B10.01 rad'], x: 67, y: 44 },
+  { id: 'belljar', name: 'Decoherence Containment Bell Jar', latin: '',
+    specs: ['Vacuum Seal \u2022 Charmed Glass', 'Contains decoherence field', 'Pressure: 0.001 atm', 'Absorptive Lining: Borosilicate Silver'], x: 50, y: 63 },
+  { id: 'siphon', name: 'Probability Wave Siphon', latin: '',
+    specs: ['Spiral Siphon Coil | Wave Condenser', 'Channels probability wave to containment vial', 'Flow Rate: 0.7 \u03BB/s'], x: 83, y: 58 },
+  { id: 'chip', name: 'Quantum Processor Chip Target', latin: '',
+    specs: ['Target: 128-Qubit Processor Chip', 'Actual Size: 2.3 cm \u00D7 2.3 cm', 'Remove via Cryo-Claw for analysis'], x: 9, y: 80 },
+  { id: 'channel', name: 'Quantum Channel', latin: '',
+    specs: ['No further specifications visible on the draft'], x: 27, y: 60 }
+];
+</script>
+<script src="schematic.js"></script>
+
+</body>
+</html>

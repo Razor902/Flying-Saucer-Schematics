@@ -1,29 +1,22 @@
-# Flying Saucer Schematics
+# Curtis's Engine Schematics
 
-Interactive engineering schematics for a flying-saucer concept craft:
-craft-wide systems map, power core, fuel & ignition, and jump charge.
+Two interactive alchemical-mechanical schematics, transcribed word for word from the drafts. No build step — open `index.html` in a browser, or serve the folder on GitHub Pages.
 
-Created September 19–20, 2026 by Curtis Ray Dyess (GitHub: Razor902).
+## The drafts
 
-## The four schematics
+- **The Hand-in-Hand Engine** (`hand-in-hand-engine.html`) — combined schematic: Genome-Weaving Engine + Quantum Processor Deciphering Engine + Conjunction Chamber (Locus Conjunctionis), *Anno MMXXIV, Scala 1:48*. Twelve labeled components with hotspots: tungsten helix coils, DNA helix gears, transmutation chamber, shared aether conduit, conjunction chamber, aether flux, equilibrium point, regulator/balancer, cryogenic claws, resonator coil array, glass bell jar. Working notes (Nota, Observationes) included as written.
+- **The Quantum Decipher Engine** (`quantum-decipher-engine.html`) — Alchemical Schematic No. QDE-VII, *Draft II, Anno 1899*. Eight labeled components: cryogenic qubit extraction claw, superposition unraveller array, entanglement severing shears, quantum gate decipher dial, decoherence containment bell jar, probability wave siphon, quantum processor chip target, quantum channel. The six-step *Principium Operandi* and the *Notae et Monitiones* are included as written; where the ink is obscured, the page says so plainly.
 
-Open any `.html` file in a browser to explore it.
+## How the interactives work
 
-- **UFO Systems Map** (`ufo-systems-map.html`) — "Craft-wide functional
-  architecture." The system one-line, the spacetime-jump permissive chain,
-  and the non-negotiable design rules.
-- **UFO Power Core Schematic** (`ufo-power-core-schematic.html`) — "Contained
-  plasma to regulated ship power." Reaction chamber, cold start to online
-  sequence, and trips that do not ask permission — four 86 lockout-relay
-  trip sequences.
-- **Fuel and Ignition Schematic** (`fuel-and-ignition-schematic.html`) —
-  "Fuel, flame & resonant ignition." One system, four paths: fuel path,
-  resonant ignition, thermal chain — fuel plus Tesla coil with contained
-  combustion. Fuel trade space and start/stop choreography.
-- **Jump Charge Schematic** (`jump-charge-schematic.html`) — "Store it slowly.
-  Release it once." Resonant charging supply, two sequencers, one irreversible
-  moment — five votes required to fire.
+- Gold markers pulse over each labeled component on the blueprint.
+- Click or tap a marker (or its name in the component list) to open a side panel with the component's name and specifications exactly as labeled on the draft.
+- Hover a marker for its name.
+- Zoom with the +/− buttons or the mouse wheel; drag to pan; reset with the ⟲ button.
 
-## License
+## Files
 
-Creative Commons Attribution 4.0 International — see LICENSE.
+- `index.html` — landing page
+- `hand-in-hand-engine.html`, `quantum-decipher-engine.html` — the two interactives
+- `hand-in-hand-engine.png`, `quantum-decipher-engine.png` — the draft images
+- `schematic.css`, `schematic.js` — shared styling and interaction (relative paths only)
