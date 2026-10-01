@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Processor Schematic — Reference Block Design</title>
+<style>
+  :root { --bg:#0b0b14; --panel:#101018; --purple:#9d4edd; --green:#39ff6a;
+          --blue:#4da6ff; --ink:#eceaf6; --dim:#a3a3c2; }
+  * { box-sizing:border-box; }
+  body { margin:0; background:var(--bg); color:var(--ink);
+         font-family:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif; }
+  .wrap { max-width:1280px; margin:0 auto; padding:28px 20px 60px; }
+  header { border-left:4px solid var(--purple); padding:6px 0 6px 18px; margin-bottom:8px; }
+  header h1 { margin:0; font-size:26px; letter-spacing:3px; }
+  header h1 .g { color:var(--green); }
+  header p { margin:6px 0 0; color:var(--dim); font-size:14px; letter-spacing:1px; }
+  .sheet { background:var(--panel); border:1px solid #2a2a3d; border-radius:12px;
+           padding:18px; margin-top:18px; }
+  svg { width:100%; height:auto; display:block; }
+  .specs { display:grid; grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
+           gap:12px; margin-top:20px; }
+  .spec { background:#14141f; border:1px solid #2a2a3d; border-radius:8px; padding:12px 14px; }
+  .spec b { color:var(--green); font-size:12px; letter-spacing:2px; display:block; margin-bottom:6px; }
+  .spec span { font-size:15px; }
+  .notes { margin-top:20px; color:var(--dim); font-size:13.5px; line-height:1.7;
+           border-top:1px solid #2a2a3d; padding-top:16px; }
+  .notes b { color:var(--ink); }
+  footer { margin-top:26px; color:#55556a; font-size:12px; letter-spacing:1px; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <h1>PROCESSOR <span class="g">SCHEMATIC</span></h1>
+    <p>REFERENCE BLOCK DESIGN &mdash; VENDOR-NEUTRAL &mdash; FOR COMPANY PITCH &amp; PLANNING</p>
+  </header>
+
+  <div class="sheet">
+  <svg viewBox="0 0 1200 880" font-family="ui-monospace,Menlo,Consolas,monospace" role="img"
+       aria-label="Block schematic of a modern eight-core processor">
+    <defs>
+      <marker id="ah" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
+        <path d="M0,0 L6,3 L0,6 Z" fill="#39ff6a"/>
+      </marker>
+    </defs>
+
+    <text x="600" y="42" text-anchor="middle" font-size="24" letter-spacing="4" fill="#eceaf6" font-weight="bold">8-CORE PROCESSOR &mdash; BLOCK SCHEMATIC</text>
+    <text x="600" y="66" text-anchor="middle" font-size="12" letter-spacing="2" fill="#a3a3c2">REFERENCE DESIGN &middot; ALL VALUES TYPICAL OF A MODERN HIGH-PERFORMANCE CLIENT PART</text>
+
+    <!-- die -->
+    <rect x="20" y="92" width="1160" height="700" rx="16" fill="#101018" stroke="#8b5cf6" stroke-width="2"/>
+
+    <!-- north: I/O + memory -->
+    <g font-size="13" font-weight="bold">
+      <rect x="40"  y="112" width="176" height="70" rx="8" fill="#0f1c33" stroke="#4da6ff" stroke-width="1.5"/>
+      <text x="128" y="140" text-anchor="middle" fill="#eceaf6">PCIe 5.0 x16</text>
+      <text x="128" y="160" text-anchor="middle" font-size="10" font-weight="normal" fill="#a3a3c2">32 GT/s</text>
+      <rect x="228" y="112" width="176" height="70" rx="8" fill="#0d2417" stroke="#39ff6a" stroke-width="1.5"/>
+      <text x="316" y="140" text-anchor="middle" fill="#eceaf6">DDR5 CH-A</text>
+      <text x="316" y="160" text-anchor="middle" font-size="10" font-weight="normal" fill="#a3a3c2">2 &times; 6400 MT/s</text>
+      <rect x="416" y="112" width="176" height="70" rx="8" fill="#0d2417" stroke="#39ff6a" stroke-width="1.5"/>
+      <text x="504" y="140" text-anchor="middle" fill="#eceaf6">DDR5 CH-B</text>
+      <text x="504" y="160" text-anchor="middle" font-size="10" font-weight="normal" fill="#a3a3c2">2 &times; 6400 MT/s</text>
+      <rect x="604" y="112" width="176" height="70" rx="8" fill="#0f1c33" stroke="#4da6ff" stroke-width="1.5"/>
+      <text x="692" y="140" text-anchor="middle" fill="#eceaf6">USB4 / I/O</text>
+      <text x="692" y="160" text-anchor="middle" font-size="10" font-weight="normal" fill="#a3a3c2">40 Gbps</text>
+      <rect x="792" y="112" width="176" height="70" rx="8" fill="#0f1c33" stroke="#4da6ff" stroke-width="1.5"/>
+      <text x="880" y="140" text-anchor="middle" fill="#eceaf6">Media Engine</text>
+      <text x="880" y="160" text-anchor="middle" font-size="10" font-weight="normal" fill="#a3a3c2">encode / decode</text>
+      <rect x="980" y="112" width="176" height="70" rx="8" fill="#0f1c33" stroke="#4da6ff" stroke-width="1.5"/>
+      <text x="1068" y="140" text-anchor="middle" fill="#eceaf6">Security</text>
+      <text x="1068" y="160" text-anchor="middle" font-size="10" font-weight="normal" fill="#a3a3c2">root of trust</text>
+    </g>
+
+    <!-- core 0 exploded -->
+    <rect x="40" y="202" width="430" height="360" rx="10" fill="#171233" stroke="#9d4edd" stroke-width="2"/>
+    <text x="255" y="226" text-anchor="middle" font-size="14" font-weight="bold" fill="#eceaf6" letter-spacing="2">CORE 0 &mdash; DETAIL</text>
+    <g font-size="12" font-weight="bold">
+      <rect x="52" y="236" width="128" height="50" rx="6" fill="#1e1845" stroke="#9d4edd"/>
+      <text x="116" y="258" text-anchor="middle" fill="#eceaf6">Branch</text>
+      <text x="116" y="274" text-anchor="middle" fill="#eceaf6">Predictor</text>
+      <rect x="190" y="236" width="118" height="50" rx="6" fill="#1e1845" stroke="#9d4edd"/>
+      <text x="249" y="266" text-anchor="middle" fill="#eceaf6">Fetch</text>
+      <rect x="318" y="236" width="140" height="50" rx="6" fill="#1e1845" stroke="#9d4edd"/>
+      <text x="388" y="258" text-anchor="middle" fill="#eceaf6">Decode</text>
+      <text x="388" y="274" text-anchor="middle" fill="#eceaf6">4-wide</text>
+      <rect x="52" y="296" width="406" height="44" rx="6" fill="#1e1845" stroke="#9d4edd"/>
+      <text x="255" y="323" text-anchor="middle" fill="#eceaf6">Out-of-Order Scheduler &middot; 384-entry ROB</text>
+      <rect x="52" y="350" width="70" height="60" rx="6" fill="#1e1845" stroke="#9d4edd"/>
+      <text x="87" y="376" text-anchor="middle" fill="#eceaf6">ALU0</text>
+      <rect x="132" y="350" width="70" height="60" rx="6" fill="#1e1845" stroke="#9d4edd"/>
+      <text x="167" y="376" text-anchor="middle" fill="#eceaf6">ALU1</text>
+      <rect x="212" y="350" width="70" height="60" rx="6" fill="#1e1845" stroke="#9d4edd"/>
+      <text x="247" y="376" text-anchor="middle" fill="#eceaf6">ALU2</text>
+      <rect x="292" y="350" width="70" height="60" rx="6" fill="#1e1845" stroke="#9d4edd"/>
+      <text x="327" y="376" text-anchor="middle" fill="#eceaf6">ALU3</text>
+      <rect x="372" y="350" width="86" height="60" rx="6" fill="#1e1845" stroke="#9d4edd"/>
+      <text x="415" y="368" text-anchor="middle" fill="#eceaf6">FPU /</text>
+      <text x="415" y="384" text-anchor="middle" fill="#eceaf6">SIMD</text>
+      <text x="415" y="398" text-anchor="middle" font-size="9" font-weight="normal" fill="#a3a3c2">512-bit</text>
+      <rect x="52" y="420" width="198" height="50" rx="6" fill="#1e1845" stroke="#9d4edd"/>
+      <text x="151" y="449" text-anchor="middle" fill="#eceaf6">Load / Store Unit</text>
+      <rect x="260" y="420" width="198" height="50" rx="6" fill="#1e1845" stroke="#9d4edd"/>
+      <text x="359" y="442" text-anchor="middle" fill="#eceaf6">Register File</text>
+      <text x="359" y="458" text-anchor="middle" font-size="9" font-weight="normal" fill="#a3a3c2">512 &times; 64-bit</text>
+      <rect x="52" y="480" width="128" height="60" rx="6" fill="#0d2417" stroke="#39ff6a"/>
+      <text x="116" y="505" text-anchor="middle" fill="#eceaf6">L1-I 32 KB</text>
+      <text x="116" y="521" text-anchor="middle" font-size="9" font-weight="normal" fill="#a3a3c2">8-way</text>
+      <rect x="190" y="480" width="128" height="60" rx="6" fill="#0d2417" stroke="#39ff6a"/>
+      <text x="254" y="505" text-anchor="middle" fill="#eceaf6">L1-D 48 KB</text>
+      <text x="254" y="521" text-anchor="middle" font-size="9" font-weight="normal" fill="#a3a3c2">12-way</text>
+      <rect x="328" y="480" width="130" height="60" rx="6" fill="#0d2417" stroke="#39ff6a"/>
+      <text x="393" y="505" text-anchor="middle" fill="#eceaf6">L2 2 MB</text>
+      <text x="393" y="521" text-anchor="middle" font-size="9" font-weight="normal" fill="#a3a3c2">16-way private</text>
+    </g>
+
+    <!-- compact cores 1-7 -->
+    <g font-size="13" font-weight="bold">
+      <rect x="490" y="202" width="156" height="170" rx="8" fill="#171233" stroke="#9d4edd" stroke-width="1.5"/>
+      <text x="568" y="232" text-anchor="middle" fill="#eceaf6">CORE 1</text>
+      <text x="568" y="258" text-anchor="middle" font-size="10" font-weight="normal" fill="#a3a3c2">4-wide OoO</text>
+      <text x="568" y="278" text-anchor="middle" font-size="10" font-weight="normal" fill="#a3a3c2">L1 32K+48K</text>
+      <text x="568" y="298" text-anchor="middle" font-size="10" font-weight="normal" fill="#a3a3c2">L2 2 MB</text>
+      <text x="568" y="330" text-anchor="middle" font-size="10" fill="#9d4edd">identical</text>
+      <rect x="659" y="202" width="156" height="170" rx="8" fill="#171233" stroke="#9d4edd" stroke-width="1.5"/>
+      <text x="737" y="232" text-anchor="middle" fill="#eceaf6">CORE 2</text>
+      <text x="737" y="258" text-anchor="middle" font-size="10" font-weight="normal" fill="#a3a3c2">4-wide OoO</text>
+      <text x="737" y="278" text-anchor="middle" font-size="10" font-weight="normal" fill="#a3a3c2">L1 32K+48K</text>
+      <text x="737" y="298" text-anchor="middle" font-size="10" font-weight="normal" fill="#a3a3c2">L2 2 MB</text>
+      <text x="737" y="330" text-anchor="middle" font-size="10" fill="#9d4edd">identical</text>
+      <rect x="828" y="202" width="156" height="170" rx="8" fill="#171233" stroke="#9d4edd" stroke-width="1.5"/>
+      <text x="906" y="232" text-anchor="middle" fill="#eceaf6">CORE 3</text>
+      <text x="906" y="258" text-anchor="middle" font-size="10" font-weight="normal" fill="#a3a3c2">4-wide OoO</text>
+      <text x="906" y="278" text-anchor="middle" font-size="10" font-weight="normal" fill="#a3a3c2">L1 32K+48K</text>
+      <text x="906" y="298" text-anchor="middle" font-size="10" font-weight="normal" fill="#a3a3c2">L2 2 MB</text>
+      <text x="906" y="330" text-anchor="middle" font-size="10" fill="#9d4edd">identical</text>
+      <rect x="997" y="202" width="156" height="170" rx="8" fill="#171233" stroke="#9d4edd" stroke-width="1.5"/>
+      <text x="1075" y="232" text-anchor="middle" fill="#eceaf6">CORE 4</text>
+      <text x="1075" y="258" text-anchor="middle" font-size="10" font-weight="normal" fill="#a3a3c2">4-wide OoO</text>
+      <text x="1075" y="278" text-anchor="middle" font-size="10" font-weight="normal" fill="#a3a3c2">L1 32K+48K</text>
+      <text x="1075" y="298" text-anchor="middle" font-size="10" font-weight="normal" fill="#a3a3c2">L2 2 MB</text>
+      <text x="1075" y="330" text-anchor="middle" font-size="10" fill="#9d4edd">identical</text>
+      <rect x="490" y="392" width="156" height="170" rx="8" fill="#171233" stroke="#9d4edd" stroke-width="1.5"/>
+      <text x="568" y="422" text-anchor="middle" fill="#eceaf6">CORE 5</text>
+      <text x="568" y="448" text-anchor="middle" font-size="10" font-weight="normal" fill="#a3a3c2">4-wide OoO</text>
+      <text x="568" y="468" text-anchor="middle" font-size="10" font-weight="normal" fill="#a3a3c2">L1 32K+48K</text>
+      <text x="568" y="488" text-anchor="middle" font-size="10" font-weight="normal" fill="#a3a3c2">L2 2 MB</text>
+      <text x="568" y="520" text-anchor="middle" font-size="10" fill="#9d4edd">identical</text>
+      <rect x="659" y="392" width="156" height="170" rx="8" fill="#171233" stroke="#9d4edd" stroke-width="1.5"/>
+      <text x="737" y="422" text-anchor="middle" fill="#eceaf6">CORE 6</text>
+      <text x="737" y="448" text-anchor="middle" font-size="10" font-weight="normal" fill="#a3a3c2">4-wide OoO</text>
+      <text x="737" y="468" text-anchor="middle" font-size="10" font-weight="normal" fill="#a3a3c2">L1 32K+48K</text>
+      <text x="737" y="488" text-anchor="middle" font-size="10" font-weight="normal" fill="#a3a3c2">L2 2 MB</text>
+      <text x="737" y="520" text-anchor="middle" font-size="10" fill="#9d4edd">identical</text>
+      <rect x="828" y="392" width="156" height="170" rx="8" fill="#171233" stroke="#9d4edd" stroke-width="1.5"/>
+      <text x="906" y="422" text-anchor="middle" fill="#eceaf6">CORE 7</text>
+      <text x="906" y="448" text-anchor="middle" font-size="10" font-weight="normal" fill="#a3a3c2">4-wide OoO</text>
+      <text x="906" y="468" text-anchor="middle" font-size="10" font-weight="normal" fill="#a3a3c2">L1 32K+48K</text>
+      <text x="906" y="488" text-anchor="middle" font-size="10" font-weight="normal" fill="#a3a3c2">L2 2 MB</text>
+      <text x="906" y="520" text-anchor="middle" font-size="10" fill="#9d4edd">identical</text>
+      <rect x="997" y="392" width="156" height="170" rx="8" fill="#141428" stroke="#8b5cf6" stroke-width="1.5"/>
+      <text x="1075" y="422" text-anchor="middle" fill="#eceaf6">Coherency</text>
+      <text x="1075" y="444" text-anchor="middle" fill="#eceaf6">Directory</text>
+      <text x="1075" y="470" text-anchor="middle" font-size="10" font-weight="normal" fill="#a3a3c2">snoop filter</text>
+      <text x="1075" y="490" text-anchor="middle" font-size="10" font-weight="normal" fill="#a3a3c2">MESI states</text>
+    </g>
+
+    <!-- arrows cores -> ring -->
+    <g stroke="#39ff6a" stroke-width="2" fill="none">
+      <line x1="150" y1="562" x2="150" y2="580" marker-end="url(#ah)"/>
+      <line x1="420" y1="562" x2="420" y2="580" marker-end="url(#ah)"/>
+      <line x1="700" y1="562" x2="700" y2="580" marker-end="url(#ah)"/>
+      <line x1="1000" y1="562" x2="1000" y2="580" marker-end="url(#ah)"/>
+    </g>
+
+    <!-- ring interconnect -->
+    <rect x="40" y="582" width="1120" height="40" rx="20" fill="#141428" stroke="#39ff6a" stroke-width="2"/>
+    <text x="600" y="608" text-anchor="middle" font-size="14" font-weight="bold" fill="#eceaf6" letter-spacing="2">RING INTERCONNECT FABRIC &middot; 32 B/CYCLE &middot; COHERENT</text>
+
+    <!-- arrows ring -> L3 -->
+    <g stroke="#39ff6a" stroke-width="2" fill="none">
+      <line x1="200" y1="622" x2="200" y2="640" marker-end="url(#ah)"/>
+      <line x1="600" y1="622" x2="600" y2="640" marker-end="url(#ah)"/>
+      <line x1="1000" y1="622" x2="1000" y2="640" marker-end="url(#ah)"/>
+    </g>
+
+    <!-- L3 slices -->
+    <g font-size="13" font-weight="bold">
+      <rect x="40" y="642" width="271" height="60" rx="8" fill="#0d2417" stroke="#39ff6a" stroke-width="1.5"/>
+      <text x="175" y="670" text-anchor="middle" fill="#eceaf6">L3 SLICE 8 MB</text>
+      <text x="175" y="688" text-anchor="middle" font-size="10" font-weight="normal" fill="#a3a3c2">16-way shared</text>
+      <rect x="323" y="642" width="271" height="60" rx="8" fill="#0d2417" stroke="#39ff6a" stroke-width="1.5"/>
+      <text x="458" y="670" text-anchor="middle" fill="#eceaf6">L3 SLICE 8 MB</text>
+      <text x="458" y="688" text-anchor="middle" font-size="10" font-weight="normal" fill="#a3a3c2">16-way shared</text>
+      <rect x="606" y="642" width="271" height="60" rx="8" fill="#0d2417" stroke="#39ff6a" stroke-width="1.5"/>
+      <text x="741" y="670" text-anchor="middle" fill="#eceaf6">L3 SLICE 8 MB</text>
+      <text x="741" y="688" text-anchor="middle" font-size="10" font-weight="normal" fill="#a3a3c2">16-way shared</text>
+      <rect x="889" y="642" width="271" height="60" rx="8" fill="#0d2417" stroke="#39ff6a" stroke-width="1.5"/>
+      <text x="1024" y="670" text-anchor="middle" fill="#eceaf6">L3 SLICE 8 MB</text>
+      <text x="1024" y="688" text-anchor="middle" font-size="10" font-weight="normal" fill="#a3a3c2">16-way shared</text>
+    </g>
+
+    <!-- arrows L3 -> south -->
+    <g stroke="#39ff6a" stroke-width="2" fill="none">
+      <line x1="200" y1="702" x2="200" y2="720" marker-end="url(#ah)"/>
+      <line x1="600" y1="702" x2="600" y2="720" marker-end="url(#ah)"/>
+      <line x1="1000" y1="702" x2="1000" y2="720" marker-end="url(#ah)"/>
+    </g>
+
+    <!-- south: platform -->
+    <g font-size="13" font-weight="bold">
+      <rect x="40" y="722" width="271" height="60" rx="8" fill="#0f1c33" stroke="#4da6ff" stroke-width="1.5"/>
+      <text x="175" y="750" text-anchor="middle" fill="#eceaf6">Power Control</text>
+      <text x="175" y="768" text-anchor="middle" font-size="10" font-weight="normal" fill="#a3a3c2">per-core DVFS</text>
+      <rect x="323" y="722" width="271" height="60" rx="8" fill="#0f1c33" stroke="#4da6ff" stroke-width="1.5"/>
+      <text x="458" y="750" text-anchor="middle" fill="#eceaf6">Clock PLL</text>
+      <text x="458" y="768" text-anchor="middle" font-size="10" font-weight="normal" fill="#a3a3c2">spread spectrum</text>
+      <rect x="606" y="722" width="271" height="60" rx="8" fill="#0f1c33" stroke="#4da6ff" stroke-width="1.5"/>
+      <text x="741" y="750" text-anchor="middle" fill="#eceaf6">Thermal</text>
+      <text x="741" y="768" text-anchor="middle" font-size="10" font-weight="normal" fill="#a3a3c2">diode array</text>
+      <rect x="889" y="722" width="271" height="60" rx="8" fill="#0f1c33" stroke="#4da6ff" stroke-width="1.5"/>
+      <text x="1024" y="750" text-anchor="middle" fill="#eceaf6">Debug / JTAG</text>
+      <text x="1024" y="768" text-anchor="middle" font-size="10" font-weight="normal" fill="#a3a3c2">trace + fuse</text>
+    </g>
+
+    <!-- legend -->
+    <g font-size="12" fill="#a3a3c2">
+      <rect x="40" y="812" width="18" height="18" rx="4" fill="#171233" stroke="#9d4edd"/>
+      <text x="66" y="826">core logic</text>
+      <rect x="200" y="812" width="18" height="18" rx="4" fill="#0d2417" stroke="#39ff6a"/>
+      <text x="226" y="826">cache / memory</text>
+      <rect x="400" y="812" width="18" height="18" rx="4" fill="#0f1c33" stroke="#4da6ff"/>
+      <text x="426" y="826">I/O &amp; platform</text>
+      <rect x="600" y="812" width="18" height="18" rx="4" fill="#141428" stroke="#39ff6a"/>
+      <text x="626" y="826">interconnect</text>
+      <text x="830" y="826" font-size="11">arrows = request / data flow</text>
+    </g>
+  </svg>
+  </div>
+
+  <div class="specs">
+    <div class="spec"><b>CORES</b><span>8 &times; 4-wide out-of-order, SMT-2 optional</span></div>
+    <div class="spec"><b>L1 CACHE</b><span>32 KB I + 48 KB D per core</span></div>
+    <div class="spec"><b>L2 CACHE</b><span>2 MB private per core, 16-way</span></div>
+    <div class="spec"><b>L3 CACHE</b><span>32 MB shared, 4 slices, 16-way</span></div>
+    <div class="spec"><b>MEMORY</b><span>Dual DDR5-6400 controllers</span></div>
+    <div class="spec"><b>I/O</b><span>PCIe 5.0 x16 &middot; USB4 &middot; media engine</span></div>
+    <div class="spec"><b>FABRIC</b><span>Coherent ring, 32 B/cycle, MESI</span></div>
+    <div class="spec"><b>PLATFORM</b><span>Per-core DVFS &middot; PLL &middot; thermal &middot; JTAG</span></div>
+  </div>
+
+  <div class="notes">
+    <b>What this is.</b> A vendor-neutral, block-level reference schematic &mdash; the architecture
+    view investors and partners look at first: cores, cache hierarchy, fabric, memory, I/O, platform.
+    Real vendor silicon (Intel, AMD, Apple, Qualcomm) is proprietary down to the transistor; nobody
+    publishes true gate-level schematics. This is the clean-room starting point a new company designs from.<br><br>
+    <b>What comes next on the road to real silicon.</b> RTL in Verilog/VHDL &rarr; functional simulation &rarr;
+    synthesis to a process node &rarr; place &amp; route &rarr; tapeout at a foundry (TSMC, Intel Foundry, Samsung).
+    A first test chip is routinely a <b>7-to-9-figure</b> undertaking &mdash; which is exactly why the pitch starts
+    with architecture, team, and the system <i>around</i> the chip.<br><br>
+    <b>The honest edge here.</b> Founders who understand silicon <i>and</i> the hardened, tethered systems around it
+    are rare. An ecosystem of tungsten-armored nodes with AI tethers is a story no commodity chip company tells.
+    That is the differentiator to lead with in the tank.
+  </div>
+
+  <footer>DRAWN FOR THE PITCH &middot; REFERENCE ONLY &middot; NOT A VENDOR DATASHEET</footer>
+</div>
+</body>
+</html>
